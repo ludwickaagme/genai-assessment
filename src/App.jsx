@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next'; 
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
 
 import logo from './assets/logo.png'; 
 import onedataWhite from './assets/onedata-white.png';
@@ -11,6 +11,7 @@ import awsColor from './assets/awscolor.png';
 import clusterColor from './assets/clustercolor.png';
 import logoColor from './assets/logocolor.png';
 
+// Importación correcta de la imagen para producción
 import fondo from './assets/fondo.jpg'; 
 import './App.css'; 
 
@@ -107,10 +108,6 @@ export default function App() {
     backgroundImage: `url(${fondo})`, backgroundSize: 'cover', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed', backgroundColor: oneDataDarkBlue, 
   };
 
-  const topBarContainerStyle = {
-    position: 'absolute', top: '40px', left: '4vw', right: '4vw', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10, pointerEvents: 'none' 
-  };
-
   const handleResetApp = () => {
     if (hasStarted && !isFinished) {
       const confirmMsg = currentLanguage === 'es' ? '¿Seguro que deseas volver al inicio? Perderás tu progreso actual.' : 'Are you sure you want to return home? Your current progress will be lost.';
@@ -187,7 +184,7 @@ export default function App() {
   };
 
   const floatingControls = (
-    <div className="no-print" style={{ position: 'fixed', bottom: '32px', opacity: 0.95, backdropFilter: 'blur(8px)', right: '32px', zIndex: 9999, display: 'flex', gap: '12px', alignItems: 'center', background: '#ffffff', padding: '8px 12px', borderRadius: '50px', boxShadow: '0 10px 30px rgba(0,0,0,0.15)', border: '1px solid #e2e8f0' }}>
+    <div className="no-print floating-controls" style={{ position: 'fixed', bottom: '32px', opacity: 0.95, backdropFilter: 'blur(8px)', right: '32px', zIndex: 9999, display: 'flex', gap: '12px', alignItems: 'center', background: '#ffffff', padding: '8px 12px', borderRadius: '50px', boxShadow: '0 10px 30px rgba(0,0,0,0.15)', border: '1px solid #e2e8f0' }}>
       {hasStarted && (
         <button onClick={handleResetApp} title={currentLanguage === 'es' ? 'Volver al inicio' : 'Return to Home'} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#edf2f7', color: '#4a5568', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '800', fontSize: '0.95rem' }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -206,57 +203,56 @@ export default function App() {
     return (
       <div className="app-layout-wrapper" style={{ ...darkFuturisticBackgroundStyle }}>
         {floatingControls}
-        <div className="main-content-flex" style={{ padding: 'clamp(3rem, 6vh, 6rem)', justifyContent: 'center' }}>
-          <div className="hero-logos no-print" style={topBarContainerStyle}>
-            <img src={clusterLogo} alt="Cluster" style={{ height: 'clamp(40px, 6vh, 65px)', objectFit: 'contain', transform: 'scale(1.8)', marginLeft: '2vw' }} />
-            <img src={onedataWhite} alt="OneData" style={{ height: 'clamp(35px, 5.5vh, 60px)', objectFit: 'contain' }} />
-            <img src={awsWhite} alt="AWS" style={{ height: 'clamp(35px, 5.5vh, 60px)', objectFit: 'contain', opacity: 0.95 }} /> 
-          </div>
-          
-          <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', gap: '2rem' }}>
-            <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}> 
-              <div style={{ maxWidth: '550px' }}>
-                <h1 className="hero-title" style={{ color: '#ffffff', fontSize: 'clamp(2.5rem, 5vh, 3.5rem)', fontWeight: '900', marginBottom: '1.5rem', lineHeight: '1.2' }}>{t('title')}</h1>
-                <p className="hero-description" style={{ color: '#ffffff', fontSize: 'clamp(1.1rem, 2.2vh, 1.25rem)', lineHeight: '1.5', marginBottom: '1.6rem', opacity: '0.95' }}>{t('subtitle')}</p>
-                <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: '1.6rem' }}></div>
-                <p className="hero-description" style={{ color: '#ffffff', fontSize: 'clamp(1.05rem, 2vh, 1.15rem)', marginBottom: '1.6rem', lineHeight: '1.5', opacity: '0.95' }}>{t('desc')}</p>
-                <p style={{ fontSize: '1.15rem', fontWeight: '800', marginBottom: '1.5rem', color: '#ffffff', textTransform: 'uppercase' }}>{t('resultsInclude')}</p>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, color: '#ffffff' }}>
-                  <li style={{ marginBottom: '1.2rem', display: 'flex', alignItems: 'flex-start', gap: '15px' }}><div style={{ width: '8px', height: '8px', backgroundColor: oneDataBrightBlue, marginTop: '0.5rem', flexShrink: 0, borderRadius: '50%' }}></div><span style={{ fontSize: '1.05rem', lineHeight: '1.5', fontWeight: '500' }}>{t('bullet1')}</span></li>
-                  <li style={{ marginBottom: '1.2rem', display: 'flex', alignItems: 'flex-start', gap: '15px' }}><div style={{ width: '8px', height: '8px', backgroundColor: oneDataBrightBlue, marginTop: '0.5rem', flexShrink: 0, borderRadius: '50%' }}></div><span style={{ fontSize: '1.05rem', lineHeight: '1.5', fontWeight: '500' }}>{t('bullet2')}</span></li>
-                  <li style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}><div style={{ width: '8px', height: '8px', backgroundColor: oneDataBrightBlue, marginTop: '0.5rem', flexShrink: 0, borderRadius: '50%' }}></div><span style={{ fontSize: '1.05rem', lineHeight: '1.5', fontWeight: '500' }}>{t('bullet3')}</span></li>
-                </ul>
-              </div>
+        
+        <div className="hero-logos no-print">
+          <img src={clusterLogo} alt="Cluster" />
+          <img src={onedataWhite} alt="OneData" />
+          <img src={awsWhite} alt="AWS" /> 
+        </div>
+
+        <div className="main-content-flex hero-section">
+          <div className="landing-container">
+            
+            <div className="landing-text-section"> 
+              <h1 className="hero-title" style={{ color: '#ffffff', fontSize: 'clamp(2.5rem, 5vh, 3.5rem)', fontWeight: '900', marginBottom: '1.5rem', lineHeight: '1.2' }}>{t('title')}</h1>
+              <p className="hero-description" style={{ color: '#ffffff', fontSize: 'clamp(1.1rem, 2.2vh, 1.25rem)', lineHeight: '1.5', marginBottom: '1.6rem', opacity: '0.95' }}>{t('subtitle')}</p>
+              <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: '1.6rem' }}></div>
+              <p className="hero-description" style={{ color: '#ffffff', fontSize: 'clamp(1.05rem, 2vh, 1.15rem)', marginBottom: '1.6rem', lineHeight: '1.5', opacity: '0.95' }}>{t('desc')}</p>
+              <p style={{ fontSize: '1.15rem', fontWeight: '800', marginBottom: '1.5rem', color: '#ffffff', textTransform: 'uppercase' }}>{t('resultsInclude')}</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, color: '#ffffff' }}>
+                <li style={{ marginBottom: '1.2rem', display: 'flex', alignItems: 'flex-start', gap: '15px' }}><div style={{ width: '8px', height: '8px', backgroundColor: oneDataBrightBlue, marginTop: '0.5rem', flexShrink: 0, borderRadius: '50%' }}></div><span style={{ fontSize: '1.05rem', lineHeight: '1.5', fontWeight: '500' }}>{t('bullet1')}</span></li>
+                <li style={{ marginBottom: '1.2rem', display: 'flex', alignItems: 'flex-start', gap: '15px' }}><div style={{ width: '8px', height: '8px', backgroundColor: oneDataBrightBlue, marginTop: '0.5rem', flexShrink: 0, borderRadius: '50%' }}></div><span style={{ fontSize: '1.05rem', lineHeight: '1.5', fontWeight: '500' }}>{t('bullet2')}</span></li>
+                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '15px' }}><div style={{ width: '8px', height: '8px', backgroundColor: oneDataBrightBlue, marginTop: '0.5rem', flexShrink: 0, borderRadius: '50%' }}></div><span style={{ fontSize: '1.05rem', lineHeight: '1.5', fontWeight: '500' }}>{t('bullet3')}</span></li>
+              </ul>
             </div>
 
-            <div style={{ flex: '1 1 400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ maxWidth: '550px', width: '100%', background: '#ffffff', padding: 'clamp(2.5rem, 4vh, 3.5rem)', borderRadius: '24px', boxShadow: '0 25px 50px rgba(0,0,0,0.1)' }}>
-                <h2 style={{ color: oneDataDarkBlue, fontSize: 'clamp(1.6rem, 2.5vh, 2rem)', marginBottom: '0.5rem', fontWeight: '900' }}>{t('formTitle')}</h2>
-                <p style={{ color: '#1a202c', fontSize: '0.95rem', marginBottom: '2rem' }}>{t('formSub')}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                  <div className="form-grid">
-                    <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fName')}</label><input type="text" name="nombre" value={userInfo.nombre} onChange={handleUserInputChange} placeholder="Ej. Juan Pérez" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} /></div>
-                    <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fCompany')}</label><input type="text" name="organizacion" value={userInfo.organizacion} onChange={handleUserInputChange} placeholder="Ej. OneData" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} /></div>
-                  </div>
-                  <div className="form-grid">
-                    <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fEmail')}</label><input type="email" name="correo" value={userInfo.correo} onChange={handleUserInputChange} placeholder="juan@empresa.com" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} /></div>
-                    <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fPhone')}</label><input type="tel" name="telefono" value={userInfo.telefono} onChange={handleUserInputChange} placeholder="Ej. +52 555..." style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} /></div>
-                  </div>
-                  <div className="form-grid">
-                    <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fRole')}</label><input type="text" name="rol" value={userInfo.rol} onChange={handleUserInputChange} placeholder="Ej. Director de TI" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none', boxSizing: 'border-box' }} /></div>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fCountry')}</label>
-                      <select name="pais" value={userInfo.pais} onChange={handleUserInputChange} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', backgroundColor: '#fff', cursor: 'pointer', boxSizing: 'border-box' }}>
-                        <option value="">{t('selectCountry')}</option><option value="Alemania">Alemania</option><option value="Argentina">Argentina</option><option value="Brasil">Brasil</option><option value="Canadá">Canadá</option><option value="Chile">Chile</option><option value="Colombia">Colombia</option><option value="España">España</option><option value="USA">Estados Unidos</option><option value="México">México</option><option value="Perú">Perú</option><option value="Reino Unido">Reino Unido</option><option value="Otro">Otro / Other</option>
-                      </select>
-                    </div>
+            <div className="main-card-container">
+              <h2 style={{ color: oneDataDarkBlue, fontSize: 'clamp(1.6rem, 2.5vh, 2rem)', marginBottom: '0.5rem', fontWeight: '900' }}>{t('formTitle')}</h2>
+              <p style={{ color: '#1a202c', fontSize: '0.95rem', marginBottom: '2rem' }}>{t('formSub')}</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                <div className="form-grid">
+                  <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fName')}</label><input type="text" name="nombre" value={userInfo.nombre} onChange={handleUserInputChange} placeholder="Ej. Juan Pérez" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }} /></div>
+                  <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fCompany')}</label><input type="text" name="organizacion" value={userInfo.organizacion} onChange={handleUserInputChange} placeholder="Ej. OneData" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }} /></div>
+                </div>
+                <div className="form-grid">
+                  <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fEmail')}</label><input type="email" name="correo" value={userInfo.correo} onChange={handleUserInputChange} placeholder="juan@empresa.com" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }} /></div>
+                  <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fPhone')}</label><input type="tel" name="telefono" value={userInfo.telefono} onChange={handleUserInputChange} placeholder="Ej. +52 555..." style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }} /></div>
+                </div>
+                <div className="form-grid">
+                  <div><label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fRole')}</label><input type="text" name="rol" value={userInfo.rol} onChange={handleUserInputChange} placeholder="Ej. Director de TI" style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }} /></div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '700', fontSize: '0.9rem' }}>{t('fCountry')}</label>
+                    <select name="pais" value={userInfo.pais} onChange={handleUserInputChange} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', backgroundColor: '#fff', cursor: 'pointer' }}>
+                      <option value="">{t('selectCountry')}</option><option value="Alemania">Alemania</option><option value="Argentina">Argentina</option><option value="Brasil">Brasil</option><option value="Canadá">Canadá</option><option value="Chile">Chile</option><option value="Colombia">Colombia</option><option value="España">España</option><option value="USA">Estados Unidos</option><option value="México">México</option><option value="Perú">Perú</option><option value="Reino Unido">Reino Unido</option><option value="Otro">Otro / Other</option>
+                    </select>
                   </div>
                 </div>
-                <button onClick={() => setHasStarted(true)} disabled={!isFormValid} style={{ marginTop: '2.5rem', width: '100%', padding: '16px', backgroundColor: isFormValid ? awsOrange : '#cbd5e0', color: '#ffffff', border: 'none', borderRadius: '14px', cursor: isFormValid ? 'pointer' : 'not-allowed', fontSize: '1.1rem', fontWeight: '800', boxShadow: isFormValid ? `0 10px 20px -5px ${awsOrange}66` : 'none' }}>
-                  {t('btnStart')}
-                </button>
               </div>
+              <button onClick={() => setHasStarted(true)} disabled={!isFormValid} style={{ marginTop: '2.5rem', width: '100%', padding: '16px', backgroundColor: isFormValid ? awsOrange : '#cbd5e0', color: '#ffffff', border: 'none', borderRadius: '14px', cursor: isFormValid ? 'pointer' : 'not-allowed', fontSize: '1.1rem', fontWeight: '800', boxShadow: isFormValid ? `0 10px 20px -5px ${awsOrange}66` : 'none' }}>
+                {t('btnStart')}
+              </button>
             </div>
+            
           </div>
         </div>
       </div>
@@ -278,7 +274,6 @@ export default function App() {
     const circleDashArray = animateCharts ? `${targetDashArray}, 113` : `0, 113`;
     const scoreColor = results.totalPercentage < 40 ? "#ef4444" : results.totalPercentage < 70 ? "#f59e0b" : "#3533cd";
 
-    // DATOS PARA EL GRÁFICO DE RADAR
     const radarData = [
       { dimension: t('dimNames.Business'), value: (results.dimensionsScore.Business / 10) * 100 },
       { dimension: t('dimNames.People'), value: (results.dimensionsScore.People / 5) * 100 },
@@ -292,18 +287,18 @@ export default function App() {
       <div className="app-layout-wrapper" style={{ ...lightFuturisticBackgroundStyle }}>
         {floatingControls}
 
-        <div className="main-content-flex">
-          <div className="hero-logos no-print" style={topBarContainerStyle}>
-            <img src={clusterLogo} alt="Cluster" style={{ height: 'clamp(40px, 6vh, 65px)', objectFit: 'contain', transform: 'scale(1.8)', marginLeft: '2vw' }} />
-            <img src={logo} alt="OneData" style={{ height: 'clamp(35px, 5.5vh, 60px)', objectFit: 'contain' }} />
-            <img src={awsWhite} alt="AWS" style={{ height: 'clamp(35px, 5.5vh, 60px)', objectFit: 'contain', opacity: 0.95 }} />
-          </div>
+        <div className="hero-logos no-print">
+          <img src={clusterLogo} alt="Cluster" />
+          <img src={logo} alt="OneData" />
+          <img src={awsWhite} alt="AWS" />
+        </div>
 
+        <div className="main-content-flex">
           <div className="results-page-wrapper">
             <div className="results-main-card">
               
               {/* ========================================================
-                  SECCIÓN 1: VISTA EXCLUSIVA WEB (Oculta en PDF)
+                  VISTA EXCLUSIVA WEB (Oculta en PDF)
                   ======================================================== */}
               <div className="no-print print-content-padding" style={{ padding: '3vh 4vw', display: 'flex', flexDirection: 'column' }}>
                 <div className="evaluation-header" style={{ marginBottom: '1.6rem' }}>
@@ -333,7 +328,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* GRÁFICO RADAR (WEB) */}
                 <div className="radar-container">
                   <h3 style={{ fontSize: '1.2rem', color: oneDataDarkBlue, fontWeight: '800', marginBottom: '1rem', textAlign: 'center' }}>Mapa de Madurez en IA Generativa</h3>
                   <div style={{ width: '100%', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
@@ -348,7 +342,7 @@ export default function App() {
 
                 <div className="results-main" style={{ marginBottom: '1.6rem' }}>
                   <h3 style={{ fontSize: '1.2rem', color: oneDataDarkBlue, fontWeight: '800', margin: '0 0 1.2rem 0', textAlign: 'left' }}>{t('dashBreakdown')}</h3>
-                  <div className="dimensions-grid" style={{ gap: '12px' }}>
+                  <div className="dimensions-grid">
                     {Object.entries(results.dimensionsScore).map(([dimension, score]) => {
                       const maxScore = (dimension === 'People' || dimension === 'Operations') ? 5 : 10;
                       const percentage = (score / maxScore) * 100;
@@ -361,7 +355,7 @@ export default function App() {
                       const dynamicShadow = isStrongest ? `0 0 0 3px ${oneDataBrightBlue}20` : isLowest ? `0 0 0 3px ${awsOrange}20` : 'none';
 
                       return (
-                        <div key={dimension} className="dimension-card" style={{ border: dynamicBorder, boxShadow: dynamicShadow, boxSizing: 'border-box' }}>
+                        <div key={dimension} className="dimension-card" style={{ border: dynamicBorder, boxShadow: dynamicShadow }}>
                           <div className="dimension-header">
                             <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', fontWeight: 700 }}>
                               <span style={{ fontSize: '1.2rem' }}>{icon}</span> {t(`dimNames.${dimension}`)}
@@ -442,7 +436,6 @@ export default function App() {
                         </ul>
                      </div>
 
-                     {/* CTA WEB */}
                      <div style={{ marginTop: '1.6rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                         <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '0.2rem', color: '#0f172a' }}>Del diagnóstico a la implementación</h3>
                         <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem' }}>Próximos pasos recomendados</p>
@@ -464,8 +457,7 @@ export default function App() {
               </div>
             
               {/* ========================================================
-                  SECCIÓN 2: VISTA EXCLUSIVA PDF (Oculta en Web)
-                  Estilo Editorial Corporativo
+                  VISTA EXCLUSIVA PDF (Oculta en Web)
                   ======================================================== */}
               <div className="print-only-block" style={{ padding: '0 20px' }}>
                 
@@ -477,7 +469,6 @@ export default function App() {
                   <img src={awsColor} alt="AWS" className="print-aws-logo" />
                 </div>
 
-                {/* PORTADA EJECUTIVA PDF */}
                 <div className="print-document-header print-avoid-break" style={{ marginBottom: '1.6rem' }}>
                   <div className="print-title-container">
                     <h1 style={{ fontSize: '1.6rem', fontWeight: '900', color: '#0f172a', marginBottom: '0.3rem', marginTop: 0 }}>
@@ -494,7 +485,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* GRÁFICO RADAR PDF (DIMENSIONES FIJAS PARA EVITAR BUG DE CHROME) */}
                 <div className="radar-container print-avoid-break">
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.5rem', textAlign: 'center' }}>Mapa de Madurez</h3>
                   <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -507,7 +497,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* TABLA EJECUTIVA DE DIMENSIONES PDF */}
                 <div className="print-dimension-table print-avoid-break" style={{ marginBottom: '1.6rem' }}>
                   <div className="print-section-divider"></div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>Desglose de Dimensiones</h3>
@@ -542,7 +531,6 @@ export default function App() {
                   </table>
                 </div>
 
-                {/* RESUMEN EJECUTIVO EDITORIAL PDF */}
                 <div className="print-avoid-break">
                   <div className="print-section-divider"></div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>Resumen Ejecutivo</h3>
@@ -552,14 +540,12 @@ export default function App() {
                   <p style={{ margin: 0, color: '#334155', lineHeight: '1.5' }}>Antes de ampliar las iniciativas de inteligencia artificial, se recomienda fortalecer esta área para reducir riesgos y asegurar una implementación sostenible.</p>
                 </div>
 
-                {/* NIVEL DE EQUILIBRIO PDF */}
                 <div className="print-avoid-break" style={{ margin: '1.6rem 0', padding: '1.2rem 1.5rem', background: '#f8fafc', borderLeft: `4px solid ${riskLabel.color}`, borderRadius: '6px' }}>
                   <p style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#0f172a' }}>Nivel de equilibrio organizacional</p>
                   <p style={{ marginTop: '0.4rem', color: riskLabel.color, fontWeight: 700, margin: '0.4rem 0 0 0' }}>{riskLabel.text}</p>
                   <p style={{ marginTop: '0.6rem', color: '#334155', lineHeight: '1.5', margin: '0.6rem 0 0 0' }}>La diferencia entre las dimensiones evaluadas indica que existen áreas con niveles de madurez desiguales. Atender estas brechas permitirá una adopción más estable y estratégica de iniciativas de IA.</p>
                 </div>
 
-                {/* DIAGNÓSTICO DE MADUREZ PDF */}
                 <div className="print-avoid-break">
                    <div className="print-section-divider"></div>
                    <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>Diagnóstico de Madurez</h3>
@@ -588,7 +574,6 @@ export default function App() {
                    </ul>
                 </div>
 
-                {/* ACTIVACIÓN ESTRATÉGICA EDITORIAL PDF (GRID) */}
                 <div className="print-avoid-break">
                   <div className="print-section-divider"></div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>Activación Estratégica Recomendada</h3>
@@ -606,7 +591,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* BENEFICIOS EXCLUSIVOS PDF */}
                 <div className="print-only-block print-avoid-break">
                   <div className="print-section-divider"></div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>Beneficios Estratégicos Incluidos</h3>
@@ -629,7 +613,6 @@ export default function App() {
                   </div>
                 </div>
                 
-                {/* DEL DIAGNÓSTICO A LA IMPLEMENTACIÓN PDF (TEXTO, SIN BOTÓN) */}
                 <div className="print-avoid-break print-cta-block" style={{ marginBottom: '1.6rem' }}>
                   <div className="print-section-divider"></div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>Del diagnóstico a la implementación</h3>
@@ -646,7 +629,6 @@ export default function App() {
                   </p>
                 </div>
 
-                {/* FOOTER EJECUTIVO PDF (REFINADO CON INFO DE MÉXICO) */}
                 <div className="pdf-footer print-only-flex print-avoid-break">
                   <div style={{ flex: 1 }}>
                     <strong style={{ color: '#0f172a', fontSize: '12px' }}>Diagnóstico de Madurez en IA Generativa</strong><br/>
@@ -705,38 +687,17 @@ export default function App() {
   const isCurrentQuestionAnswered = answers[currentQuestion.id] !== undefined;
 
   return (
-    <div className="app-layout-wrapper" style={{ ...lightFuturisticBackgroundStyle }}>
+    <div className="app-layout-wrapper">
       {floatingControls}
-      <div className="main-content-flex">
-        <div className="hero-logos no-print" style={topBarContainerStyle}>
-          <img src={clusterLogo} alt="Cluster" style={{ height: 'clamp(40px, 6vh, 65px)', objectFit: 'contain', transform: 'scale(1.8)', marginLeft: '2vw' }} />
-          <img src={onedataWhite} alt="OneData" style={{ height: 'clamp(35px, 5.5vh, 60px)', objectFit: 'contain' }} />
-          <img src={awsWhite} alt="AWS" style={{ height: 'clamp(35px, 5.5vh, 60px)', objectFit: 'contain', opacity: 0.95 }} />
+      <div className="main-content-flex hero-section" style={{ ...lightFuturisticBackgroundStyle }}>
+        
+        <div className="hero-logos no-print">
+          <img src={clusterLogo} alt="Cluster" />
+          <img src={onedataWhite} alt="OneData" />
+          <img src={awsWhite} alt="AWS" style={{ opacity: 0.95 }} />
         </div>
 
-<div
-  ref={questionRef}
-  className="question-container"
-  style={{
-    position: 'relative',
-    zIndex: 1,
-    width: '100%',
-    maxWidth: '1100px',
-    margin: '0 auto',
-    minHeight: 'auto',
-    height: 'auto',
-    background: 'rgba(255,255,255,0.95)',
-    backdropFilter: 'blur(10px)',
-    padding: '3rem 3vw',
-    borderRadius: '24px',
-    boxShadow: '0 30px 70px rgba(0,0,0,0.5)',
-    display: 'flex',
-    flexDirection: 'column',
-    boxSizing: 'border-box',
-    gap: '2rem'
-  }}
->          
-          {/* BARRA DE PROGRESO */}
+        <div ref={questionRef} className="question-container">
           <div key={`prog-${currentQuestionIndex}`} style={{ flexShrink: 0, width: '100%', maxWidth: '1000px', alignSelf: 'center' }}>
             <div className="question-progress-header">
               <div className="dimension-label">
