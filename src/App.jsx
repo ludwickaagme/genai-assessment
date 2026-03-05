@@ -477,11 +477,16 @@ export default function App() {
                 
                 <div className="print-brand-strip print-only-block"></div>
 
-                <div className="print-logos-header print-only-flex">
-                  <img src={clusterColor} alt="Cluster" className="print-cluster-logo" />
-                  <img src={logoColor} alt="OneData" className="print-onedata-logo" />
-                  <img src={awsColor} alt="AWS" className="print-aws-logo" />
-                </div>
+               <div className="print-logos-header print-only-flex">
+
+  {brandConfig.showCluster && (
+    <img src={clusterColor} alt="Cluster" className="print-cluster-logo" />
+  )}
+
+  <img src={logoColor} alt="OneData" className="print-onedata-logo" />
+  <img src={awsColor} alt="AWS" className="print-aws-logo" />
+
+</div>
 
                 <div className="print-document-header print-avoid-break" style={{ marginBottom: '1.6rem' }}>
                   <div className="print-title-container">
