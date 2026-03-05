@@ -1,9 +1,9 @@
-//import { brandConfig } from "./config/configCluster"
-import { brandConfig } from "./config/configAWS"
+//import { brandConfig } from "./config/configAWS";
+import { brandConfig } from "./config/configCluster";
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next'; 
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from "recharts";
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 
 import logo from './assets/logo.png'; 
 import onedataWhite from './assets/onedata-white.png';
@@ -11,17 +11,17 @@ import awsWhite from './assets/AWS-white.png';
 import clusterLogo from './assets/cluster.png'; 
 
 import awsColor from './assets/awscolor.png';
-import clusterColor from './assets/clustercolor.png';
+import clusterColor from './assets/clustercolor.jpeg';
 import logoColor from './assets/logocolor.png';
 
 // Importación correcta de la imagen para producción
 import fondo from './assets/fondo.jpg'; 
 import './App.css'; 
 
-// VARIABLE GLOBAL DE BRANDING
+// 1️⃣ VARIABLE GLOBAL DE BRANDING (Actualizada)
 const BRAND_VARIANT = brandConfig.showCluster ? "cluster" : "aws";
 
-// NUEVO COMPONENTE REUTILIZABLE
+// 2️⃣ NUEVO COMPONENTE REUTILIZABLE (Actualizado)
 const HeroLogos = ({ variant = "cluster", theme = "dark" }) => {
   return (
     <div className="hero-logos no-print">
@@ -304,7 +304,7 @@ export default function App() {
       <div className="app-layout-wrapper" style={{ ...lightFuturisticBackgroundStyle }}>
         {floatingControls}
 
-        {/* REEMPLAZO 2: PÁGINA DE RESULTADOS (Theme light para asegurar contraste) */}
+        {/* REEMPLAZO 2: PÁGINA DE RESULTADOS */}
         <HeroLogos variant={BRAND_VARIANT} theme="light" />
 
         <div className="main-content-flex">
@@ -345,12 +345,25 @@ export default function App() {
                 <div className="radar-container">
                   <h3 style={{ fontSize: '1.2rem', color: oneDataDarkBlue, fontWeight: '800', marginBottom: '1rem', textAlign: 'center' }}>Mapa de Madurez en IA Generativa</h3>
                   <div style={{ width: '100%', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
-                    <RadarChart width={500} height={320} cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                    <RadarChart width={420} height={300} cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                       <PolarGrid />
                       <PolarAngleAxis dataKey="dimension" tick={{fill: '#475569', fontSize: 12, fontWeight: 600}} />
                       <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{fill: '#94a3b8', fontSize: 10}} />
                       <Radar name="Madurez" dataKey="value" stroke={scoreColor} fill={scoreColor} fillOpacity={0.4} />
                     </RadarChart>
+                  </div>
+
+                  {/* 6️⃣ BARRA VISUAL DE MADUREZ (Web) */}
+                  <div style={{ marginTop: "20px", maxWidth: "420px", marginLeft: "auto", marginRight: "auto" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "600", color: "#475569" }}>
+                      <span>Exploring</span>
+                      <span>Adopting</span>
+                      <span>Implementing</span>
+                      <span>Transforming</span>
+                    </div>
+                    <div style={{ position: "relative", height: "8px", background: "#e2e8f0", borderRadius: "4px", marginTop: "8px" }}>
+                      <div style={{ position: "absolute", height: "8px", background: "#3533cd", width: `${results.totalPercentage}%`, borderRadius: "4px" }}></div>
+                    </div>
                   </div>
                 </div>
 
@@ -457,6 +470,15 @@ export default function App() {
                         <p style={{ marginBottom: '1rem', color: '#334155', lineHeight: '1.5' }}>El siguiente paso consiste en transformar estos hallazgos en una hoja de ruta clara que permita avanzar de forma estructurada hacia la implementación de soluciones basadas en IA.</p>
                         <p style={{ marginBottom: '1.5rem', color: '#334155', lineHeight: '1.5' }}>Nuestro equipo acompaña a organizaciones en la definición, diseño e implementación de estas iniciativas dentro de entornos cloud empresariales.</p>
                         <a href="mailto:contact@onedatasoftware.com" style={{ display: 'inline-block', padding: '10px 26px', backgroundColor: '#3533cd', color: '#ffffff', textDecoration: 'none', borderRadius: '6px', fontWeight: '600' }}>Contactar al equipo</a>
+                        
+                        {/* 4️⃣ LOGOS EN SECCIÓN (Web) */}
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "40px", marginTop: "25px" }}>
+                          {brandConfig.showCluster && (
+                            <img src={clusterColor} alt="Cluster" style={{ height: "32px" }} />
+                          )}
+                          <img src={logoColor} alt="OneData" style={{ height: "32px" }} />
+                          <img src={awsColor} alt="AWS" style={{ height: "28px" }} />
+                        </div>
                      </div>
                    </div>
                 </div>
@@ -477,35 +499,36 @@ export default function App() {
                 
                 <div className="print-brand-strip print-only-block"></div>
 
-               <div className="print-logos-header print-only-flex">
+                {/* 3️⃣ LOGOS DINÁMICOS EN EL PDF */}
+                <div className="print-document-header print-avoid-break" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap:"40px", maxWidth:"900px", margin:"0 auto" }}>
+                  <div style={{display:"flex", gap:"20px", alignItems:"center"}}>
+                    {brandConfig.showCluster && (
+                      <img src={clusterColor} alt="Cluster" style={{height:"32px"}}/>
+                    )}
+                    <img src={logoColor} alt="OneData" style={{height:"32px"}}/>
+                  </div>
 
-  {brandConfig.showCluster && (
-    <img src={clusterColor} alt="Cluster" className="print-cluster-logo" />
-  )}
-
-  <img src={logoColor} alt="OneData" className="print-onedata-logo" />
-  <img src={awsColor} alt="AWS" className="print-aws-logo" />
-
-</div>
-
-                <div className="print-document-header print-avoid-break" style={{ marginBottom: '1.6rem' }}>
-                  <div className="print-title-container">
-                    <h1 style={{ fontSize: '1.6rem', fontWeight: '900', color: '#0f172a', marginBottom: '0.3rem', marginTop: 0 }}>
+                  <div style={{textAlign:"center"}}>
+                    <h1 style={{ fontSize: '1.6rem', fontWeight: '900', margin:0 }}>
                       Diagnóstico de Madurez en IA Generativa
                     </h1>
-                    <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0 }}>
+                    <p style={{ margin:0, color:"#64748b" }}>
                       Evaluación de Preparación para IA
                     </p>
                   </div>
-                  <div style={{ marginTop: '1.5rem', marginBottom: '1.6rem' }}>
-                    <p style={{ fontWeight: '600', color: '#0f172a', margin: '0 0 0.2rem 0', fontSize: '1.1rem' }}>{userInfo.nombre}</p>
-                    <p style={{ color: '#64748b', margin: 0, fontSize: '0.95rem' }}>{userInfo.organizacion}</p>
-                    <p style={{ marginTop: '0.4rem', fontSize: '0.85rem', color: '#94a3b8', margin: '0.4rem 0 0 0' }}>{userInfo.fecha}</p>
-                  </div>
+
+                  <img src={awsColor} alt="AWS" style={{height:"32px"}}/>
                 </div>
 
-                <div className="radar-container print-avoid-break">
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.5rem', textAlign: 'center' }}>Mapa de Madurez</h3>
+                <div style={{ marginTop:"10px", fontSize:"12px", color:"#64748b" }}>
+                  Evaluado para: <strong>{userInfo.nombre}</strong> | {userInfo.organizacion}<br/>
+                  Fecha: {userInfo.fecha}
+                </div>
+
+                <div className="radar-container print-avoid-break" style={{ padding:"20px", marginTop:"10px", marginBottom:"25px", border:"1px solid #e2e8f0", borderRadius:"10px" }}>
+                  <h3 style={{ fontSize: "1.2rem", fontWeight: "800", letterSpacing: "0.5px", textTransform: "uppercase", marginTop: "10px", marginBottom: "20px", color:"#0f172a", textAlign: "center" }}>
+                    MAPA DE MADUREZ
+                  </h3>
                   <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <RadarChart width={500} height={300} cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                       <PolarGrid />
@@ -513,6 +536,19 @@ export default function App() {
                       <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{fill: '#94a3b8', fontSize: 8}} />
                       <Radar name="Madurez" dataKey="value" stroke={scoreColor} fill={scoreColor} fillOpacity={0.4} isAnimationActive={false} />
                     </RadarChart>
+                  </div>
+
+                  {/* 6️⃣ BARRA VISUAL DE MADUREZ (PDF) */}
+                  <div style={{ marginTop: "20px", maxWidth: "420px", marginLeft: "auto", marginRight: "auto" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "600", color: "#475569" }}>
+                      <span>Exploring</span>
+                      <span>Adopting</span>
+                      <span>Implementing</span>
+                      <span>Transforming</span>
+                    </div>
+                    <div style={{ position: "relative", height: "8px", background: "#e2e8f0", borderRadius: "4px", marginTop: "8px" }}>
+                      <div style={{ position: "absolute", height: "8px", background: "#3533cd", width: `${results.totalPercentage}%`, borderRadius: "4px" }}></div>
+                    </div>
                   </div>
                 </div>
 
@@ -646,26 +682,101 @@ export default function App() {
                     contacte a nuestro equipo en:<br/><br/>
                     <strong>contact@onedatasoftware.com</strong>
                   </p>
+
+                  {/* 4️⃣ LOGOS EN SECCIÓN (PDF) */}
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "40px", marginTop: "20px" }}>
+                    {brandConfig.showCluster && (
+                      <img src={clusterColor} alt="Cluster" style={{ height: "32px" }} />
+                    )}
+                    <img src={logoColor} alt="OneData" style={{ height: "32px" }} />
+                    <img src={awsColor} alt="AWS" style={{ height: "28px" }} />
+                  </div>
                 </div>
 
-                <div className="pdf-footer print-only-flex print-avoid-break">
-                  <div style={{ flex: 1 }}>
-                    <strong style={{ color: '#0f172a', fontSize: '12px' }}>Diagnóstico de Madurez en IA Generativa</strong><br/>
-                    OneData + AWS
-                  </div>
-                  <div style={{ flex: 1, textAlign: 'center' }}>
-                    <strong style={{ color: '#0f172a', fontSize: '12px' }}>Oficina México</strong><br/>
-                    Av Armando Birlaín Shaffler No.2001<br/>
-                    Centro Sur, Piso 14, Corporativo 2<br/>
-                    Santiago de Querétaro, Qro, México
-                  </div>
-                  <div style={{ flex: 1, textAlign: 'right' }}>
-                    <strong style={{ color: '#0f172a', fontSize: '12px' }}>Contacto Comercial</strong><br/>
-                    +52 442 403 7629 | +52 446 144 3375<br/>
-                    contact@onedatasoftware.com<br/><br/>
-                    © {new Date().getFullYear()} OneData Software Solutions
-                  </div>
-                </div>
+                {/* 5️⃣ FOOTER DEL PDF CON BRANDING */}
+<div className="pdf-footer print-only-flex print-avoid-break" style={{
+  marginTop:"50px",
+  padding:"26px 24px",
+  background:"#f8fafc",
+  borderTop:"3px solid #3533cd",
+  fontSize:"12px",
+  color:"#334155"
+}}>
+
+<div style={{
+  maxWidth:"780px",
+  margin:"0 auto"
+}}>
+
+{/* INFO EN COLUMNAS */}
+<div style={{
+  display: "flex",
+  justifyContent: "space-between",
+  maxWidth: "780px",
+  margin: "0 auto",
+  gap: "30px",
+  marginBottom: "18px",
+  lineHeight: "1.6"
+}}>
+
+  <div style={{
+    flex: 3,
+    whiteSpace: "normal",
+    wordBreak: "keep-all",
+    overflowWrap: "normal"
+  }}>
+    <strong style={{ fontSize:"13px", color:"#0f172a" }}>
+      OneData Software Solutions
+    </strong>
+    <br/>
+    Av Armando Birlaín Shaffler No.2001<br/>
+    Centro Sur, Piso 14<br/>
+    Santiago de Querétaro, México
+  </div>
+
+  <div style={{ flex: 2, textAlign:"right" }}>
+    contact@onedatasoftware.com<br/>
+    +52 442 403 7629<br/>
+    © {new Date().getFullYear()} OneData
+  </div>
+
+</div>
+
+{/* PARTNERSHIP */}
+<div style={{
+  display:"flex",
+  justifyContent:"center",
+  alignItems:"center",
+  gap:"14px"
+}}>
+
+<div style={{
+  height:"1px",
+  background:"#cbd5e1",
+  flex:1
+}}/>
+
+<img src={logoColor} style={{height:"22px"}}/>
+
+<span style={{
+  color:"#94a3b8",
+  fontWeight:"600"
+}}>
+|
+</span>
+
+<img src={awsColor} style={{height:"20px"}}/>
+
+<div style={{
+  height:"1px",
+  background:"#cbd5e1",
+  flex:1
+}}/>
+
+</div>
+
+</div>
+</div>
 
               </div>
             </div>
@@ -710,7 +821,7 @@ export default function App() {
       {floatingControls}
       <div className="main-content-flex hero-section" style={{ ...lightFuturisticBackgroundStyle }}>
         
-        {/* REEMPLAZO 3: CUESTIONARIO (Theme dark para fondo oscuro) */}
+        {/* REEMPLAZO 3: CUESTIONARIO */}
         <HeroLogos variant={BRAND_VARIANT} theme="dark" />
 
         <div ref={questionRef} className="question-container">
