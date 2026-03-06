@@ -8,29 +8,77 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "r
 import logo from './assets/logo.png'; 
 import onedataWhite from './assets/onedata-white.png';
 import awsWhite from './assets/AWS-white.png';
-import clusterLogo from './assets/cluster.png'; 
+import clusterLogo from './assets/cluster2.png'; 
 
 import awsColor from './assets/awscolor.png';
-import clusterColor from './assets/clustercolor.jpeg';
 import logoColor from './assets/logocolor.png';
 
-// Importación correcta de la imagen para producción
+import lbCluster from './assets/clusterblanco.png';
 import fondo from './assets/fondo.jpg'; 
 import './App.css'; 
 
-// 1️⃣ VARIABLE GLOBAL DE BRANDING (Actualizada)
+// 💡 TIP PRO APLICADO: Agrupación de logos para evitar variables rotas
+const assets = {
+  cluster: clusterLogo,
+  onedata: logoColor,
+  aws: awsColor
+};
+
 const BRAND_VARIANT = brandConfig.showCluster ? "cluster" : "aws";
 
-// 2️⃣ NUEVO COMPONENTE REUTILIZABLE (Actualizado)
 const HeroLogos = ({ variant = "cluster", theme = "dark" }) => {
   return (
-    <div className="hero-logos no-print">
-      {variant === "cluster" && (
-        <img src={clusterLogo} alt="Cluster" />
-      )}
-      {/* Condicionamos el logo de OneData para que contraste bien según el fondo */}
-      <img src={theme === "light" ? logo : onedataWhite} alt="OneData" />
-      <img src={awsWhite} alt="AWS" />
+    <div
+      className="hero-logos no-print"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr auto 1fr",
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "20px 24px"
+      }}
+    >
+      
+      {/* IZQUIERDA */}
+      <div style={{ justifySelf: "start" }}>
+        {variant === "cluster" && (
+          <img
+            src={lbCluster}
+            alt="Cluster"
+            style={{ height: "clamp(40px, 5vw, 65px)", width: "auto" }}
+          />
+        )}
+      </div>
+
+      {/* CENTRO */}
+      <div style={{ justifySelf: "center" }}>
+        <img
+          src={theme === "light" ? logo : onedataWhite}
+          alt="OneData"
+          style={{
+            height: "clamp(32px, 4vw, 50px)",
+            maxWidth: "260px",
+            width: "100%",
+            objectFit: "contain"
+          }}
+        />
+      </div>
+
+      {/* DERECHA */}
+      <div style={{ justifySelf: "end" }}>
+        <img
+          src={awsWhite}
+          alt="AWS"
+          style={{
+            height: "clamp(34px, 4.5vw, 52px)",
+            maxWidth: "90px",
+            objectFit: "contain"
+          }}
+        />
+      </div>
+
     </div>
   );
 };
@@ -81,7 +129,7 @@ export default function App() {
     ],
     Platform: [
       { title: "AWS Data Migration", link: "https://offerings.onedatasoftware.com/aws-data-migration/", description: "Migración segura y confiable de datos hacia infraestructura escalable en AWS." },
-      { title: "CloudOps - OneData", link: "https://offerings.onedatasoftware.com/aws-cloud-ops-governance/", description: "Optimización y gobierno de infraestructura en la nube para soportar iniciativas de IA." }
+      { title: "CloudOps - OneData", link: "https://offerings.onedatasoftware.com/aws-cloud-ops-governance/", description: "Optimización y gobierno de infraestructura en la nube para soportar initiatives de IA." }
     ],
     Security: [
       { title: "AWS Security Solutions", link: "https://offerings.onedatasoftware.com/aws-security/", description: "Protección integral de datos, identidades y cargas de trabajo en la nube." },
@@ -466,18 +514,18 @@ export default function App() {
                      <div style={{ marginTop: '1.6rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                         <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '0.2rem', color: '#0f172a' }}>Del diagnóstico a la implementación</h3>
                         <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem' }}>Próximos pasos recomendados</p>
-                        <p style={{ marginBottom: '1rem', color: '#334155', lineHeight: '1.5' }}>Este diagnóstico ofrece una visión inicial del nivel de preparación de la organización para adoptar iniciativas de inteligencia artificial.</p>
+                        <p style={{ marginBottom: '1rem', color: '#334155', lineHeight: '1.5' }}>Este diagnóstico ofrece una visión inicial del nivel de preparación de la organización para adoptar initiatives de inteligencia artificial.</p>
                         <p style={{ marginBottom: '1rem', color: '#334155', lineHeight: '1.5' }}>El siguiente paso consiste en transformar estos hallazgos en una hoja de ruta clara que permita avanzar de forma estructurada hacia la implementación de soluciones basadas en IA.</p>
                         <p style={{ marginBottom: '1.5rem', color: '#334155', lineHeight: '1.5' }}>Nuestro equipo acompaña a organizaciones en la definición, diseño e implementación de estas iniciativas dentro de entornos cloud empresariales.</p>
                         <a href="mailto:contact@onedatasoftware.com" style={{ display: 'inline-block', padding: '10px 26px', backgroundColor: '#3533cd', color: '#ffffff', textDecoration: 'none', borderRadius: '6px', fontWeight: '600' }}>Contactar al equipo</a>
                         
                         {/* 4️⃣ LOGOS EN SECCIÓN (Web) */}
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "40px", marginTop: "25px" }}>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "30px", marginTop: "45px", flexWrap: "wrap" }}>
                           {brandConfig.showCluster && (
-                            <img src={clusterColor} alt="Cluster" style={{ height: "32px" }} />
+                            <img src={assets.cluster} alt="Cluster" style={{ height: "45px", objectFit: "contain" }} />
                           )}
-                          <img src={logoColor} alt="OneData" style={{ height: "32px" }} />
-                          <img src={awsColor} alt="AWS" style={{ height: "28px" }} />
+                          <img src={assets.onedata} alt="OneData" style={{ height: "50px", objectFit: "contain" }} />
+                          <img src={assets.aws} alt="AWS" style={{ height: "45px", objectFit: "contain" }} />
                         </div>
                      </div>
                    </div>
@@ -492,38 +540,76 @@ export default function App() {
                 </div>
               </div>
             
-              {/* ========================================================
-                  VISTA EXCLUSIVA PDF (Oculta en Web)
-                  ======================================================== */}
-              <div className="print-only-block" style={{ padding: '0 20px' }}>
-                
-                <div className="print-brand-strip print-only-block"></div>
+        {/* ========================================================
+            VISTA EXCLUSIVA PDF (Oculta en Web)
+        ======================================================== */}
+        <div className="print-only-block" style={{ padding: '0 20px' }}>
+          
+         {/* LOGOS SUPERIORES GIGANTES Y LIBERADOS */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
+          alignItems: "center",
+          width: "100%",
+          marginBottom: "20px"
+        }}>
 
-                {/* 3️⃣ LOGOS DINÁMICOS EN EL PDF */}
-                <div className="print-document-header print-avoid-break" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap:"40px", maxWidth:"900px", margin:"0 auto" }}>
-                  <div style={{display:"flex", gap:"20px", alignItems:"center"}}>
-                    {brandConfig.showCluster && (
-                      <img src={clusterColor} alt="Cluster" style={{height:"32px"}}/>
-                    )}
-                    <img src={logoColor} alt="OneData" style={{height:"32px"}}/>
-                  </div>
+          {/* IZQUIERDA */}
+          <div style={{ justifySelf: "start" }}>
+            {brandConfig.showCluster && (
+              <img src={assets.cluster} alt="Cluster" style={{ height: "45px" }} />
+            )}
+          </div>
 
-                  <div style={{textAlign:"center"}}>
-                    <h1 style={{ fontSize: '1.6rem', fontWeight: '900', margin:0 }}>
-                      Diagnóstico de Madurez en IA Generativa
-                    </h1>
-                    <p style={{ margin:0, color:"#64748b" }}>
-                      Evaluación de Preparación para IA
-                    </p>
-                  </div>
+          {/* CENTRO */}
+          <div style={{ justifySelf: "center" }}>
+            <img src={assets.onedata} alt="OneData" style={{ height: "55px" }} />
+          </div>
 
-                  <img src={awsColor} alt="AWS" style={{height:"32px"}}/>
-                </div>
+          {/* DERECHA */}
+          <div style={{ justifySelf: "end" }}>
+            <img src={assets.aws} alt="AWS" style={{ height: "45px" }} />
+          </div>
 
-                <div style={{ marginTop:"10px", fontSize:"12px", color:"#64748b" }}>
-                  Evaluado para: <strong>{userInfo.nombre}</strong> | {userInfo.organizacion}<br/>
-                  Fecha: {userInfo.fecha}
-                </div>
+        </div>
+
+
+{/* BARRA SEPARADORA */}
+<div style={{
+  width: "100%",
+  height: "4px",
+  background: "#3533cd",
+  marginBottom: "18px"
+}}/>
+
+
+{/* TITULO (NO LO TOCAMOS) */}
+<div style={{ textAlign:"center" }}>
+  <h1 style={{
+    fontSize: "1.6rem",
+    fontWeight: "900",
+    margin:0
+  }}>
+    Diagnóstico de Madurez en IA Generativa
+  </h1>
+
+  <p style={{
+    margin:0,
+    color:"#64748b"
+  }}>
+    Evaluación de Preparación para IA
+  </p>
+</div>
+          {/* BLOQUE DE INFORMACIÓN */}
+          <div style={{
+            marginTop:"10px",
+            fontSize:"12px",
+            color:"#64748b",
+            textAlign:"center"
+          }}>
+            Evaluado para: <strong>{userInfo.nombre}</strong> | {userInfo.organizacion}<br/>
+            Fecha: {userInfo.fecha}
+          </div>
 
                 <div className="radar-container print-avoid-break" style={{ padding:"20px", marginTop:"10px", marginBottom:"25px", border:"1px solid #e2e8f0", borderRadius:"10px" }}>
                   <h3 style={{ fontSize: "1.2rem", fontWeight: "800", letterSpacing: "0.5px", textTransform: "uppercase", marginTop: "10px", marginBottom: "20px", color:"#0f172a", textAlign: "center" }}>
@@ -646,7 +732,8 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="print-only-block print-avoid-break">
+                {/* AQUÍ SE APLICÓ LA SOLUCIÓN 1 Y 2 */}
+                <div className="print-benefits-section print-avoid-break">
                   <div className="print-section-divider"></div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>Beneficios Estratégicos Incluidos</h3>
                   <div className="print-title-accent"></div>
@@ -666,7 +753,7 @@ export default function App() {
                       <p>Formación estructurada para garantizar adopción, entendimiento y ejecución sólida de la IA dentro de su organización.</p>
                     </div>
                   </div>
-                </div>
+                </div> {/* ← ESTE ES EL CIERRE CORRECTO DE LOS BENEFICIOS */}
                 
                 <div className="print-avoid-break print-cta-block" style={{ marginBottom: '1.6rem' }}>
                   <div className="print-section-divider"></div>
@@ -682,125 +769,103 @@ export default function App() {
                     contacte a nuestro equipo en:<br/><br/>
                     <strong>contact@onedatasoftware.com</strong>
                   </p>
-
-                  {/* 4️⃣ LOGOS EN SECCIÓN (PDF) */}
-                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "40px", marginTop: "20px" }}>
-                    {brandConfig.showCluster && (
-                      <img src={clusterColor} alt="Cluster" style={{ height: "32px" }} />
-                    )}
-                    <img src={logoColor} alt="OneData" style={{ height: "32px" }} />
-                    <img src={awsColor} alt="AWS" style={{ height: "28px" }} />
-                  </div>
                 </div>
 
-                {/* 5️⃣ FOOTER DEL PDF CON BRANDING */}
-<div className="pdf-footer print-only-flex print-avoid-break" style={{
-  marginTop:"50px",
-  padding:"26px 24px",
-  background:"#f8fafc",
-  borderTop:"3px solid #3533cd",
-  fontSize:"12px",
-  color:"#334155"
-}}>
+                {/* 5️⃣ FOOTER DEL PDF CON BRANDING (SOLUCIÓN TABLE PARA EVITAR RUPTURAS FLEX) */}
 
-<div style={{
-  maxWidth:"780px",
-  margin:"0 auto"
-}}>
+                <div className="print-only-block print-avoid-break" style={{
+                  width: "100%",
+                  marginTop: "60px",
+                  paddingTop: "24px",
+                  borderTop: "2px solid #3533cd",
+                  background: "#ffffff",
+                  fontSize: "11px",
+                  color: "#475569",
+                  pageBreakInside: "avoid"
+                }}>
 
-{/* INFO EN COLUMNAS */}
-<div style={{
-  display: "flex",
-  justifyContent: "space-between",
-  maxWidth: "780px",
-  margin: "0 auto",
-  gap: "30px",
-  marginBottom: "18px",
-  lineHeight: "1.6"
-}}>
+                  <div style={{ width: "100%" }}>
+                    
+                    {/* TÍTULO MARCA */}
+                    <div style={{
+                      textAlign: "center",
+                      fontWeight: "800",
+                      fontSize: "13px",
+                      color: "#0f172a",
+                      marginBottom: "16px",
+                      letterSpacing: "1px",
+                      textTransform: "uppercase"
+                    }}>
+                      OneData Software Solutions
+                    </div>
 
-  <div style={{
-    flex: 3,
-    whiteSpace: "normal",
-    wordBreak: "keep-all",
-    overflowWrap: "normal"
-  }}>
-    <strong style={{ fontSize:"13px", color:"#0f172a" }}>
-      OneData Software Solutions
-    </strong>
-    <br/>
-    Av Armando Birlaín Shaffler No.2001<br/>
-    Centro Sur, Piso 14<br/>
-    Santiago de Querétaro, México
-  </div>
+                    {/* COLUMNAS DE INFO (Usando display table para garantizar la estructura en PDF) */}
+                    <div style={{
+                      display: "table",
+                      width: "100%",
+                      marginBottom: "30px", // Más espacio antes de los logos gigantes
+                      lineHeight: "1.6"
+                    }}>
+                      <div style={{ display: "table-cell", textAlign: "left", width: "50%", verticalAlign: "top" }}>
+                        Av Armando Birlaín Shaffler No.2001<br/>
+                        Centro Sur, Piso 14<br/>
+                        Santiago de Querétaro, México
+                      </div>
+                      <div style={{ display: "table-cell", textAlign: "right", width: "50%", verticalAlign: "top" }}>
+                        contact@onedatasoftware.com<br/>
+                        +52 442 403 7629<br/>
+                        © {new Date().getFullYear()} OneData
+                      </div>
+                    </div>
 
-  <div style={{ flex: 2, textAlign:"right" }}>
-    contact@onedatasoftware.com<br/>
-    +52 442 403 7629<br/>
-    © {new Date().getFullYear()} OneData
-  </div>
+                    {/* LOGOS MASIVOS (SIN SEPARADORES Y CON ESPACIO DISTRIBUIDO) */}
+                    <div style={{
+                      display: "flex",
+                      justifyContent: "space-evenly", // Los distribuye limpiamente sin amontonarlos
+                      alignItems: "center",
+                      width: "100%",
+                      paddingTop: "20px",
+                      borderTop: "1px solid #cbd5e1" // Agregamos una línea suave arriba de los logos para enmarcarlos
+                    }}>
+                      
+                      {brandConfig?.showCluster && (
+                        <img src={assets.cluster} alt="Cluster" style={{ height: "45px", objectFit: "contain" }}/>
+                      )}
+                      
+                      <img src={assets.onedata} alt="OneData" style={{ height: "55px", objectFit: "contain" }}/>
+                      
+                      <img src={assets.aws} alt="AWS" style={{ height: "45px", objectFit: "contain" }}/>
+                      
+                    </div>
 
-</div>
+                  </div>
+                </div> {/* Cierra footer del pdf */}
 
-{/* PARTNERSHIP */}
-<div style={{
-  display:"flex",
-  justifyContent:"center",
-  alignItems:"center",
-  gap:"14px"
-}}>
+              </div> {/* Cierra print-only-block */}
 
-<div style={{
-  height:"1px",
-  background:"#cbd5e1",
-  flex:1
-}}/>
+            </div> {/* Cierra results-main-card */}
 
-<img src={logoColor} style={{height:"22px"}}/>
+          </div> {/* Cierra results-page-wrapper */}
+        </div> {/* Cierra main-content-flex */}
 
-<span style={{
-  color:"#94a3b8",
-  fontWeight:"600"
-}}>
-|
-</span>
-
-<img src={awsColor} style={{height:"20px"}}/>
-
-<div style={{
-  height:"1px",
-  background:"#cbd5e1",
-  flex:1
-}}/>
-
-</div>
-
-</div>
-</div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 🔹 FOOTER WEB (NO SE IMPRIME) */}
+      {/* 🔹 FOOTER WEB (NO SE IMPRIME) */}
         <footer className="main-footer no-print">
           <div className="footer-container">
             <div className="footer-column">
-              <h4>Presencia Internacional</h4>
+              <h4>🌎 Presencia Internacional</h4>
               <p>México · USA · Canadá · India · Sri Lanka</p>
             </div>
             <div className="footer-column">
-              <h4>Oficina México</h4>
+              <h4>📍 Oficina México</h4>
               <p>Av Armando Birlaín Shaffler No.2001</p>
               <p>Centro Sur, Piso 14, Corporativo 2</p>
               <p>Santiago de Querétaro, Qro, México</p>
             </div>
             <div className="footer-column">
-              <h4>Contacto Comercial</h4>
-              <p>+52 442 403 7629</p>
-              <p>+52 446 144 3375</p>
-              <p>contact@onedatasoftware.com</p>
+              <h4>📞 Contacto Comercial</h4>
+              <p>☎ +52 442 403 7629</p>
+              <p>☎ +52 446 144 3375</p>
+              <p>✉ contact@onedatasoftware.com</p>
             </div>
           </div>
           <div className="footer-bottom">
