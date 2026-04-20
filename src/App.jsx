@@ -1,5 +1,3 @@
-import { brandConfig } from "./config/configAWS";
-
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next'; 
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
@@ -7,111 +5,69 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "r
 import logo from './assets/logo.png'; 
 import onedataWhite from './assets/onedata-white.png';
 import awsWhite from './assets/AWS-white.png';
-import clusterLogo from './assets/cluster2.png'; 
 
 import awsColor from './assets/awscolor.png';
 import logoColor from './assets/logocolor.png';
 
-import lbCluster from './assets/clusterblanco.png';
 import fondo from './assets/fondo.jpg'; 
 import './App.css'; 
 
 const assets = {
-  cluster: clusterLogo,
   onedata: logoColor,
   aws: awsColor
 };
 
-const BRAND_VARIANT = brandConfig.showCluster ? "cluster" : "aws";
 
-const HeroLogos = ({ variant = "cluster", theme = "dark" }) => {
-  return (<div
-    className="hero-logos no-print"
-    style={{
-      display: "grid",
-      gridTemplateColumns: "1fr auto 1fr",
-      alignItems: "center",
-      width: "100%",
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "20px 24px"
-    }}
-  >
+const HeroLogos = ({ theme = "dark" }) => {
+  return (
+    <div
+      className="hero-logos no-print"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr auto 1fr",
+        alignItems: "center",
+        width: "100%",
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "20px 24px"
+      }}
+    >
 
-    {variant === "cluster" ? (
-      <>
-        {/* IZQUIERDA AWS */}
-        <div style={{ justifySelf: "start" }}>
-          <img
-            src={awsWhite}
-            alt="AWS"
-            style={{
-              height: "clamp(34px, 4.5vw, 52px)",
-              maxWidth: "90px",
-              objectFit: "contain"
-            }}
-          />
-        </div>
+      {/* IZQUIERDA ONEDATA */}
+      <div style={{ justifySelf: "start" }}>
+        <img
+          src={theme === "light" ? logo : onedataWhite}
+          alt="OneData"
+          style={{
+            height: "clamp(32px, 4vw, 50px)",
+            maxWidth: "260px",
+            width: "100%",
+            objectFit: "contain"
+          }}
+        />
+      </div>
 
-        {/* CENTRO CLUSTER */}
-        <div style={{ justifySelf: "center" }}>
-          <img
-            src={lbCluster}
-            alt="Cluster"
-            style={{ height: "clamp(40px, 5vw, 65px)", width: "auto" }}
-          />
-        </div>
+      {/* CENTRO vacío */}
+      <div />
 
-        {/* DERECHA ONEDATA */}
-        <div style={{ justifySelf: "end" }}>
-          <img
-            src={theme === "light" ? logo : onedataWhite}
-            alt="OneData"
-            style={{
-              height: "clamp(32px, 4vw, 50px)",
-              maxWidth: "260px",
-              width: "100%",
-              objectFit: "contain"
-            }}
-          />
-        </div>
-      </>
-    ) : (
-      <>
-        {/* IZQUIERDA ONEDATA */}
-        <div style={{ justifySelf: "start" }}>
-          <img
-            src={theme === "light" ? logo : onedataWhite}
-            alt="OneData"
-            style={{
-              height: "clamp(32px, 4vw, 50px)",
-              maxWidth: "260px",
-              width: "100%",
-              objectFit: "contain"
-            }}
-          />
-        </div>
+      {/* DERECHA AWS */}
+      <div style={{ justifySelf: "end" }}>
+        <img
+          src={awsWhite}
+          alt="AWS"
+          style={{
+            height: "clamp(34px, 4.5vw, 52px)",
+            maxWidth: "90px",
+            objectFit: "contain"
+          }}
+        />
+      </div>
 
-        {/* CENTRO vacío */}
-        <div />
-
-        {/* DERECHA AWS */}
-        <div style={{ justifySelf: "end" }}>
-          <img
-            src={awsWhite}
-            alt="AWS"
-            style={{
-              height: "clamp(34px, 4.5vw, 52px)",
-              maxWidth: "90px",
-              objectFit: "contain"
-            }}
-          />
-        </div>
-      </>
-    )}
-
-  </div>);
+    </div>
+  );
 };
+
+
 
 export default function App() {
   const { t, i18n } = useTranslation(); 
@@ -130,6 +86,22 @@ export default function App() {
   const [animateCharts, setAnimateCharts] = useState(false); 
   
   const questionRef = useRef(null);
+
+
+  const countries = [
+  "germany",
+  "argentina",
+  "brazil",
+  "canada",
+  "chile",
+  "colombia",
+  "spain",
+  "usa",
+  "mexico",
+  "peru",
+  "uk",
+  "other"
+];
 
 // ===============================
 // VALIDACIONES DE FORMULARIO
@@ -344,13 +316,13 @@ const isFormValid =
   isValidEmail(userInfo.correo) &&
   isValidPhone(userInfo.telefono) &&
   isValidText(userInfo.rol, 30) &&
-  (!brandConfig.showCluster || userInfo.clusterMember !== '');
   userInfo.pais.trim() !== '';
+
       return (
       <div className="app-layout-wrapper" style={{ ...darkFuturisticBackgroundStyle }}>
         {floatingControls}
         
-        <HeroLogos variant={BRAND_VARIANT} theme="dark" />
+ <HeroLogos theme="dark" />
 
         <div className="main-content-flex hero-section">
           <div className="landing-container">
@@ -392,7 +364,7 @@ const isFormValid =
           pattern="[A-Za-zÀ-ÿ\s]+"
           value={userInfo.nombre}
           onChange={handleUserInputChange}
-          placeholder={t('phName')}
+          placeholder={t('Enter your full name')}
           style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }}
         />
       </div>
@@ -408,7 +380,7 @@ const isFormValid =
           maxLength={35}
           value={userInfo.organizacion}
           onChange={handleUserInputChange}
-          placeholder={t('phCompany')}
+          placeholder={t('Company name')}
           style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }}
         />
       </div>
@@ -426,7 +398,7 @@ const isFormValid =
           maxLength={50}
           value={userInfo.correo}
           onChange={handleUserInputChange}
-          placeholder={t('phEmail')}
+          placeholder={t('you@company.com')}
           style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }}
         />
       </div>
@@ -460,41 +432,10 @@ const isFormValid =
           maxLength={30}
           value={userInfo.rol}
           onChange={handleUserInputChange}
-          placeholder={t('phRole')}
+          placeholder={t('Your role (e.g. CTO, Data Analyst)')}
           style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }}
         />
       </div>
-
-{brandConfig.showCluster && (
-  <div>
-    <label style={{
-      display: 'block',
-      marginBottom: '0.4rem',
-      fontWeight: '700',
-      fontSize: '0.9rem'
-    }}>
-      ¿Eres miembro del Cluster?
-    </label>
-
-    <select
-      name="clusterMember"
-      value={userInfo.clusterMember}
-      onChange={handleUserInputChange}
-      style={{
-        width: '100%',
-        padding: '12px 14px',
-        borderRadius: '10px',
-        border: '2px solid #e2e8f0',
-        backgroundColor: '#fff',
-        cursor: 'pointer'
-      }}
-    >
-      <option value="">Selecciona una opción...</option>
-      <option value="true">Sí</option>
-      <option value="false">No</option>
-    </select>
-  </div>
-)}
 
 
       <div>
@@ -504,23 +445,18 @@ const isFormValid =
 
         <select
           name="pais"
-          value={userInfo.pais}
+          value={t(`countries.${userInfo.pais}`)}
           onChange={handleUserInputChange}
           style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', backgroundColor: '#fff', cursor: 'pointer' }}
         >
-          <option value="">{t('selectCountry')}</option>
-          <option value="Alemania">Alemania</option>
-          <option value="Argentina">Argentina</option>
-          <option value="Brasil">Brasil</option>
-          <option value="Canadá">Canadá</option>
-          <option value="Chile">Chile</option>
-          <option value="Colombia">Colombia</option>
-          <option value="España">España</option>
-          <option value="USA">Estados Unidos</option>
-          <option value="México">México</option>
-          <option value="Perú">Perú</option>
-          <option value="Reino Unido">Reino Unido</option>
-          <option value="Otro">Otro / Other</option>
+
+<option value="">{t('selectCountry')}</option>
+
+{countries.map((c) => (
+  <option key={c} value={c}>
+    {t(`countries.${c}`)}
+  </option>
+))}
         </select>
       </div>
     </div>
@@ -566,7 +502,7 @@ const isFormValid =
       <div className="app-layout-wrapper" style={{ ...lightFuturisticBackgroundStyle }}>
         {floatingControls}
 
-        <HeroLogos variant={BRAND_VARIANT} theme="light" />
+        <HeroLogos theme="light" />
 
         <div className="main-content-flex">
           <div className="results-page-wrapper">
@@ -581,7 +517,7 @@ const isFormValid =
                     <h4 style={{ margin: '0 0 5px 0', color: '#64748b', fontSize: '0.85rem', textTransform: 'uppercase' }}>{t('dashEvalOf')}</h4>
                     <p style={{ margin: '0 0 4px 0', fontSize: '1.4rem', fontWeight: 800, color: oneDataDarkBlue }}>{userInfo.nombre}</p>
                     <p style={{ margin: 0, fontSize: '1rem', color: oneDataBrightBlue, fontWeight: 600 }}>{userInfo.rol} <span style={{color: '#94a3b8', fontWeight: 400}}>| {userInfo.organizacion}</span></p>
-                    <p style={{ margin: '4px 0 0 0', color: awsGray, fontSize: '0.85rem' }}>{userInfo.pais} • {t("date")}: {new Date(userInfo.fecha).toLocaleDateString(i18n.language, {
+                    <p style={{ margin: '4px 0 0 0', color: awsGray, fontSize: '0.85rem' }}>{t(`countries.${userInfo.pais}`)} • {t("date")}: {new Date(userInfo.fecha).toLocaleDateString(i18n.language, {
   year: "numeric",
   month: "long",
   day: "numeric"
@@ -765,9 +701,6 @@ const isFormValid =
                         <a href="mailto:contact@onedatasoftware.com" style={{ display: 'inline-block', padding: '10px 26px', backgroundColor: '#3533cd', color: '#ffffff', textDecoration: 'none', borderRadius: '6px', fontWeight: '600' }}>{t('btnContactTeam')}</a>
                         
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "30px", marginTop: "45px", flexWrap: "wrap" }}>
-                          {brandConfig.showCluster && (
-                            <img src={assets.cluster} alt="Cluster" style={{ height: "45px", objectFit: "contain" }} />
-                          )}
                           <img src={assets.onedata} alt="OneData" style={{ height: "50px", objectFit: "contain" }} />
                           <img src={assets.aws} alt="AWS" style={{ height: "45px", objectFit: "contain" }} />
                         </div>
@@ -997,29 +930,6 @@ const isFormValid =
                   </div>
                 </div>
 
-                {!brandConfig.showCluster && (
-                <div className="print-benefits-section print-avoid-break">
-                  <div className="print-section-divider"></div>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', color: '#0f172a', marginBottom: '0.8rem' }}>{t('strategicBenefits')}</h3>
-                  <div className="print-title-accent"></div>
-                  <p style={{ fontSize: '0.95rem', color: '#475569', marginBottom: '1.6rem', marginTop: 0 }}>{t('strategicBenefitsDesc')}</p>
-                  
-                  <div className="benefits-list">
-                    <div className="benefit-item print-avoid-break">
-                      <strong>{t('benefit1Title')}</strong>
-                      <p>{t('benefit1Desc')}</p>
-                    </div>
-                    <div className="benefit-item print-avoid-break">
-                      <strong>{t('benefit2Title')}</strong>
-                      <p>{t('benefit2Desc')}</p>
-                    </div>
-                    <div className="benefit-item print-avoid-break">
-                      <strong>{t('benefit3Title')}</strong>
-                      <p>{t('benefit3Desc')}</p>
-                    </div>
-                  </div>
-                </div>
-                )}
                 
                 <div className="print-avoid-break print-cta-block" style={{ marginBottom: '1.6rem' }}>
                   <div className="print-section-divider"></div>
@@ -1068,13 +978,14 @@ const isFormValid =
                       lineHeight: "1.6"
                     }}>
                       <div style={{ display: "table-cell", textAlign: "left", width: "50%", verticalAlign: "top" }}>
-                        Av Armando Birlaín Shaffler No.2001<br/>
-                        Centro Sur, Piso 14<br/>
-                        Santiago de Querétaro, México
+                        <strong>Headquarters - USA</strong><br/>
+                          OneData Software Solutions LLC.<br/>
+                          534 River Crossing Drive – 102<br/>
+                          Fort Mill, SC 29715, USA
                       </div>
                       <div style={{ display: "table-cell", textAlign: "right", width: "50%", verticalAlign: "top" }}>
                         contact@onedatasoftware.com<br/>
-                        +52 442 403 7629<br/>
+                        +91 78456 06222<br/>
                         © {new Date().getFullYear()} OneData
                       </div>
                     </div>
@@ -1101,7 +1012,7 @@ const isFormValid =
           </div> 
         </div> 
 
-      <footer className="main-footer no-print">
+<footer className="main-footer no-print">
   <div className="footer-container">
 
     <div className="footer-column">
@@ -1110,16 +1021,15 @@ const isFormValid =
     </div>
 
     <div className="footer-column">
-      <h4>📍 {t("footer.office")}</h4>
-      <p>Av Armando Birlaín Shaffler No.2001</p>
-      <p>Centro Sur, Piso 14, Corporativo 2</p>
-      <p>Santiago de Querétaro, Qro, México</p>
+      <h4>📍 Headquarters – USA</h4>
+      <p>OneData Software Solutions LLC.</p>
+      <p>534 River Crossing Drive – 102</p>
+      <p>Fort Mill, SC 29715, USA</p>
     </div>
 
     <div className="footer-column">
       <h4>📞 {t("footer.contact")}</h4>
-      <p>☎ +52 442 403 7629</p>
-      <p>☎ +52 446 144 3375</p>
+      <p>☎ +91 78456 06222</p>
       <p>✉ contact@onedatasoftware.com</p>
     </div>
 
@@ -1147,7 +1057,7 @@ const isFormValid =
       {floatingControls}
       <div className="main-content-flex hero-section" style={{ ...lightFuturisticBackgroundStyle }}>
         
-        <HeroLogos variant={BRAND_VARIANT} theme="dark" />
+      <HeroLogos theme="dark" />
 
         <div ref={questionRef} className="question-container">
           <div key={`prog-${currentQuestionIndex}`} style={{ flexShrink: 0, width: '100%', maxWidth: '1000px', alignSelf: 'center' }}>

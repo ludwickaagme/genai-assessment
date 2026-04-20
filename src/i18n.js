@@ -13,8 +13,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'es', // Idioma por defecto al entrar a la página
-    fallbackLng: 'es', // Si falta una traducción, usa español por seguridad
+    lng: 'en', 
+    fallbackLng: 'en', 
+    supportedLngs: ['en', 'es'],
     interpolation: {
       escapeValue: false 
     }

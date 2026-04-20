@@ -15,7 +15,23 @@
   "fRole": "Role / Title *",
   "fCountry": "Country *",
   "btnStart": "START ASSESSMENT",
+ 
   "selectCountry": "Select your country...",
+  "countries": {
+    "germany": "Germany",
+    "argentina": "Argentina",
+    "brazil": "Brazil",
+    "canada": "Canada",
+    "chile": "Chile",
+    "colombia": "Colombia",
+    "spain": "Spain",
+    "usa": "United States",
+    "mexico": "Mexico",
+    "peru": "Peru",
+    "uk": "United Kingdom",
+    "other": "Other"
+  },
+
   "btnBack": "← Back",
   "btnNext": "Continue →",
   "btnResults": "View results →",
@@ -28,6 +44,7 @@
     "Security": "Security",
     "Operations": "Operations"
   },
+  
   "questionOf": "Question {{current}} / {{total}}",
   "selectOption": "Please select one of the answers below:",
   "dashTitle": "AI Maturity Dashboard",
@@ -178,6 +195,8 @@
       "rec3Desc": "Upon reaching this level of maturity, business challenges become unique. You need specialized architectural guidance from OneData to monetize your Data and AI assets, creating brand new revenue streams."
     }
   },
+
+  
   "internationalPresence": "Mexico · USA · Canada · India · Sri Lanka",
 
 "footer": {

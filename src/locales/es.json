@@ -15,7 +15,22 @@
   "fRole": "Rol / Cargo *",
   "fCountry": "País *",
   "btnStart": "EMPEZAR DIAGNÓSTICO",
-  "selectCountry": "Seleccione su país...",
+ "selectCountry": "Selecciona tu país",
+  "countries": {
+    "germany": "Alemania",
+    "argentina": "Argentina",
+    "brazil": "Brasil",
+    "canada": "Canadá",
+    "chile": "Chile",
+    "colombia": "Colombia",
+    "spain": "España",
+    "usa": "Estados Unidos",
+    "mexico": "México",
+    "peru": "Perú",
+    "uk": "Reino Unido",
+    "other": "Otro"
+  },
+  
   "phName": "Ej. Juan Pérez",
   "phCompany": "Ej. OneData",
   "phEmail": "juan@empresa.com",
@@ -34,6 +49,7 @@
     "Security": "Seguridad",
     "Operations": "Operaciones"
   },
+
   "questionOf": "Pregunta {{current}} / {{total}}",
   "selectOption": "Por favor, seleccione una de las respuestas a continuación:",
   "dashTitle": "Dashboard de Madurez IA",
