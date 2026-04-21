@@ -325,8 +325,8 @@ const levelKey = maturityLevels.find(l => totalPercentage <= l.max).key;
         </button>
       )}
       <div style={{ display: 'flex', gap: '4px', borderLeft: hasStarted ? '2px solid #e2e8f0' : 'none', paddingLeft: hasStarted ? '8px' : '0' }}>
-        <button onClick={() => changeLanguage('es')} style={{ padding: '8px 14px', background: currentLanguage === 'es' ? awsOrange : 'transparent', color: currentLanguage === 'es' ? '#ffffff' : '#a0aec0', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '900', fontSize: '0.95rem' }}>ES</button>
-        <button onClick={() => changeLanguage('en')} style={{ padding: '8px 14px', background: currentLanguage === 'en' ? awsOrange : 'transparent', color: currentLanguage === 'en' ? '#ffffff' : '#a0aec0', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '900', fontSize: '0.95rem' }}>EN</button>
+        <button onClick={() => changeLanguage('es')} style={{ padding: '8px 14px', background: currentLanguage === 'es' ? awsOrange : 'transparent', color: currentLanguage === 'es' ? '#ffffff' : '#a0aec0', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '900', fontSize: '0.95rem' }}> {t('langSpanish')} </button>
+        <button onClick={() => changeLanguage('en')} style={{ padding: '8px 14px', background: currentLanguage === 'en' ? awsOrange : 'transparent', color: currentLanguage === 'en' ? '#ffffff' : '#a0aec0', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '900', fontSize: '0.95rem' }}> {t('langEnglish')} </button>
       </div>
     </div>
   );

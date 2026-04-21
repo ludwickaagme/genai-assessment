@@ -15,6 +15,10 @@
   "fRole": "Rol / Cargo *",
   "fCountry": "País *",
   "btnStart": "EMPEZAR DIAGNÓSTICO",
+
+  "langSpanish": "Español",
+  "langEnglish": "Inglés",
+
  "selectCountry": "Selecciona tu país",
   "countries": {
     "germany": "Alemania",

@@ -15,6 +15,9 @@
   "fRole": "Role / Title *",
   "fCountry": "Country *",
   "btnStart": "START ASSESSMENT",
+
+  "langSpanish": "Spanish",
+  "langEnglish": "English",
  
   "selectCountry": "Select your country...",
   "countries": {
