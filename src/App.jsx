@@ -71,6 +71,25 @@ const HeroLogos = ({ theme = "dark" }) => {
 
 export default function App() {
   const { t, i18n } = useTranslation(); 
+
+  // 🌍 DETECCIÓN DE IDIOMA AUTOMÁTICA (PRODUCCIÓN)
+  useEffect(() => {
+    const savedLang = localStorage.getItem('lang');
+
+    if (savedLang) {
+      i18n.changeLanguage(savedLang);
+      return;
+    }
+
+    const hostname = window.location.hostname;
+
+    if (hostname.includes(".mx")) {
+      i18n.changeLanguage("es");
+    } else {
+      i18n.changeLanguage("en");
+    }
+  }, [i18n]);
+
   const currentLanguage = i18n.language;
   const rawQuestions = t('questions', { returnObjects: true });
   const questions = Array.isArray(rawQuestions) ? rawQuestions : [];
@@ -225,7 +244,10 @@ const goToNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) { setCurrentQuestionIndex(currentQuestionIndex + 1); } else { setIsFinished(true); }
   };
   const goToPreviousQuestion = () => { if (currentQuestionIndex > 0) setCurrentQuestionIndex(currentQuestionIndex - 1); };
-  const changeLanguage = (lng) => { i18n.changeLanguage(lng); };
+  const changeLanguage = (lng) => { 
+  i18n.changeLanguage(lng);
+  localStorage.setItem('lang', lng);
+};
 
   const getCardStyleVariables = (level, isSelected) => {
     const palettes = {
@@ -414,7 +436,7 @@ const isFormValid =
           maxLength={15}
           value={userInfo.telefono}
           onChange={handleUserInputChange}
-          placeholder={t('phPhone')}
+          placeholder={t('+1 123 456 7890')}
           style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', outline: 'none' }}
         />
       </div>
@@ -445,7 +467,7 @@ const isFormValid =
 
         <select
           name="pais"
-          value={t(`countries.${userInfo.pais}`)}
+          value={userInfo.pais}
           onChange={handleUserInputChange}
           style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '2px solid #e2e8f0', backgroundColor: '#fff', cursor: 'pointer' }}
         >
