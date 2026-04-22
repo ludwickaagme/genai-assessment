@@ -5,10 +5,8 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "r
 import logo from './assets/logo.png'; 
 import onedataWhite from './assets/onedata-white.png';
 import awsWhite from './assets/AWS-white.png';
-
 import awsColor from './assets/awscolor.png';
 import logoColor from './assets/logocolor.png';
-
 import fondo from './assets/fondo.jpg'; 
 import './App.css'; 
 
@@ -16,7 +14,6 @@ const assets = {
   onedata: logoColor,
   aws: awsColor
 };
-
 
 const HeroLogos = ({ theme = "dark" }) => {
   return (
@@ -70,6 +67,7 @@ const HeroLogos = ({ theme = "dark" }) => {
 
 
 export default function App() {
+  const [showConfirm, setShowConfirm] = useState(false);
   const { t, i18n } = useTranslation(); 
 
   // 🌍 DETECCIÓN DE IDIOMA AUTOMÁTICA (PRODUCCIÓN)
@@ -105,7 +103,7 @@ export default function App() {
   const [animateCharts, setAnimateCharts] = useState(false); 
   
   const questionRef = useRef(null);
-
+    const hasSentResultsRef = useRef(false);
 
   const countries = [
   "germany",
@@ -216,11 +214,9 @@ const isValidText = (text, max) => {
   };
 
   const handleResetApp = () => {
-    if (hasStarted && !isFinished) {
-      const confirmMsg = currentLanguage === 'es' ? '¿Seguro que deseas volver al inicio? Perderás tu progreso actual.' : 'Are you sure you want to return home? Your current progress will be lost.';
-      if (!window.confirm(confirmMsg)) return;
-    }
+ 
     setAnswers({}); setUserInfo({ nombre: '', organizacion: '', correo: '', telefono: '', rol: '', pais: '', fecha: new Date().toISOString().split('T')[0] });
+        hasSentResultsRef.current = false;
     setIsFinished(false); setHasStarted(false); setCurrentQuestionIndex(0); setAnimateCharts(false); 
   };
 
@@ -239,6 +235,41 @@ const handleUserInputChange = (e) => {
 
   setUserInfo({ ...userInfo, [name]: value });
 };
+const sendResultsToWordPress = async () => {
+  const results = calculateResults();
+
+  const payload = {
+    name: userInfo.nombre,
+    email: userInfo.correo,
+    company: userInfo.organizacion,
+    phone: userInfo.telefono,
+    role: userInfo.rol,
+    country: userInfo.pais,
+    score: results.totalPoints
+  };
+
+  try {
+    const res = await fetch("https://onedatasoftware.mx/wp-json/ai-assessment/v1/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    console.log("Saved to WordPress:", data);
+  } catch (err) {
+    console.log("API Error:", err);
+  }
+};
+
+useEffect(() => {
+  if (!isFinished || hasSentResultsRef.current) return;
+  hasSentResultsRef.current = true;
+  sendResultsToWordPress();
+}, [isFinished]);
+
 
 const goToNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) { setCurrentQuestionIndex(currentQuestionIndex + 1); } else { setIsFinished(true); }
@@ -316,20 +347,187 @@ const levelKey = maturityLevels.find(l => totalPercentage <= l.max).key;
     };
   };
 
-  const floatingControls = (
-    <div className="no-print floating-controls" style={{ position: 'fixed', bottom: '32px', opacity: 0.95, backdropFilter: 'blur(8px)', right: '32px', zIndex: 9999, display: 'flex', gap: '12px', alignItems: 'center', background: '#ffffff', padding: '8px 12px', borderRadius: '50px', boxShadow: '0 10px 30px rgba(0,0,0,0.15)', border: '1px solid #e2e8f0' }}>
+ const floatingControls = (
+  <>
+    <div
+      className="no-print floating-controls"
+      style={{
+        position: 'fixed',
+        bottom: '32px',
+        right: '32px',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        background: 'rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '999px',
+        padding: '6px',
+        border: '1px solid rgba(255,255,255,0.12)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+      }}
+    >
+
+      {/* HOME + DIVIDER SOLO SI EXISTE */}
       {hasStarted && (
-        <button onClick={handleResetApp} title={currentLanguage === 'es' ? 'Volver al inicio' : 'Return to Home'} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#edf2f7', color: '#4a5568', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '800', fontSize: '0.95rem' }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          {currentLanguage === 'es' ? 'Inicio' : 'Home'}
-        </button>
+        <>
+          <button
+            onClick={() => setShowConfirm(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '4px 10px',
+              background: 'transparent',
+              color: '#e2e8f0',
+              border: 'none',
+              borderRadius: '999px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              fontSize: '0.75rem'
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+
+            {currentLanguage === 'es' ? 'Inicio' : 'Home'}
+          </button>
+
+          {/* 🔥 DIVISOR REAL (no hack) */}
+          <div
+            style={{
+              width: '1px',
+              height: '16px',
+              background: 'rgba(255,255,255,0.2)',
+              margin: '0 4px'
+            }}
+          />
+        </>
       )}
-      <div style={{ display: 'flex', gap: '4px', borderLeft: hasStarted ? '2px solid #e2e8f0' : 'none', paddingLeft: hasStarted ? '8px' : '0' }}>
-        <button onClick={() => changeLanguage('es')} style={{ padding: '8px 14px', background: currentLanguage === 'es' ? awsOrange : 'transparent', color: currentLanguage === 'es' ? '#ffffff' : '#a0aec0', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '900', fontSize: '0.95rem' }}> {t('langSpanish')} </button>
-        <button onClick={() => changeLanguage('en')} style={{ padding: '8px 14px', background: currentLanguage === 'en' ? awsOrange : 'transparent', color: currentLanguage === 'en' ? '#ffffff' : '#a0aec0', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: '900', fontSize: '0.95rem' }}> {t('langEnglish')} </button>
+
+      {/* LANGUAGE SWITCHER */}
+      <div
+        style={{
+          display: 'flex',
+          gap: '2px',
+          alignItems: 'center',
+          background: 'rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '999px',
+          padding: '3px',
+          border: '1px solid rgba(255,255,255,0.12)'
+        }}
+      >
+        <button
+          onClick={() => changeLanguage('es')}
+          style={{
+            padding: '3px 8px',
+            borderRadius: '999px',
+            border: 'none',
+            cursor: 'pointer',
+           background: currentLanguage === 'es' ? '#FF9900' : 'transparent',
+           color: currentLanguage === 'es' ? '#ffffff' : '#cbd5e0',
+            fontWeight: '500',
+            fontSize: '0.75rem',
+            transition: 'all 0.2s ease'
+
+          }}
+        >
+          {currentLanguage === 'en' ? 'Spanish' : 'Español'}
+        </button>
+
+        <button
+          onClick={() => changeLanguage('en')}
+          style={{
+            padding: '3px 8px',
+            borderRadius: '999px',
+            border: 'none',
+            cursor: 'pointer',
+            background: currentLanguage === 'en' ? '#FF9900' : 'transparent',
+            color: currentLanguage === 'en' ? '#ffffff' : '#cbd5e0',
+            fontWeight: '500',
+            fontSize: '0.75rem',
+            transition: 'all 0.2s ease'
+
+          }}
+        >
+          {currentLanguage === 'en' ? 'English' : 'Inglés'}
+        </button>
       </div>
     </div>
-  );
+
+    {/* MODAL */}
+    {showConfirm && (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 99999
+        }}
+      >
+        <div
+          style={{
+            background: 'rgba(15, 23, 42, 0.95)',
+            backdropFilter: 'blur(12px)',
+            padding: '20px',
+            borderRadius: '16px',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: '#fff',
+            width: '300px',
+            textAlign: 'center'
+          }}
+        >
+          <p style={{ marginBottom: '16px' }}>
+            {currentLanguage === 'es'
+              ? '¿Estás seguro de que quieres volver al inicio?'
+              : 'Are you sure you want to return to home?'}
+          </p>
+
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+            <button
+              onClick={() => setShowConfirm(false)}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: 'rgba(255,255,255,0.1)',
+                color: '#fff',
+                cursor: 'pointer'
+              }}
+            >
+              {currentLanguage === 'es' ? 'Cancelar' : 'Cancel'}
+            </button>
+
+            <button
+              onClick={() => {
+                handleResetApp();
+                setShowConfirm(false);
+              }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: '#FF9900', // naranja AWS
+                color: '#ffffff',
+                cursor: 'pointer'
+              }}
+            >
+              {currentLanguage === 'es' ? 'Aceptar' : 'Confirm'}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
+);
 
   if (!hasStarted) {
 const isFormValid =
@@ -1085,7 +1283,8 @@ const isFormValid =
           <div key={`prog-${currentQuestionIndex}`} style={{ flexShrink: 0, width: '100%', maxWidth: '1000px', alignSelf: 'center' }}>
             <div className="question-progress-header">
               <div className="dimension-label">
-{t("dimension")}: <span>{t(`dimNames.${currentQuestion.dimension}`)}</span>              </div>
+                   {t("dimension")}: <span>{t(`dimNames.${currentQuestion.dimension}`)}</span>                                             
+          </div>
               <div className="progress-center">
                 <div className="progress-bar">
                   <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
